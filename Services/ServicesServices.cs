@@ -20,6 +20,14 @@ namespace ApiServicios.Services
                 {
                     Id= s.Id,
                     Nombre= s.Nombre,
+                    servicios = s.Planes.Select(x => new ServicesDetailsDTO()
+                    {
+                        Id= x.Id,
+                        Nombre = x.Nombre,
+                        Descripcion = x.Descripcion,
+                        Precio = x.Precio,
+                        IdServicio = x.IdServicio,
+                    }).ToList(),
                 })
                 .ToListAsync();
 

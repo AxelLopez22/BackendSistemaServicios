@@ -3,7 +3,7 @@ using ApiServicios.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var MyAllowSpecificationsOrigins = "_myAllowSpecificationsOrigins";
 // Add services to the container.
 
 builder.Services.AddDbContext<SistemaServiciosContext>(options =>
@@ -16,9 +16,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IServicesServices, ServicesServices>();
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificationsOrigins, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+    });
+});
 
-var app = builder.Build();
+builder.Services.AddScoped<IServicesServices, ServicesServices>();
+builder.Services.AddScoped<IClienteServices, ClienteServices>();
+builder.Services.AddScoped<IClienteServicio, ClienteServicioServices>();
+builder.Services.AddScoped<IUsuarioServices, UsuarioServices>();
+
+    var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificationsOrigins);
 
 app.UseAuthorization();
 
