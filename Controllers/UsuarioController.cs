@@ -37,5 +37,25 @@ namespace ApiServicios.Controllers
 
             return Ok(res);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO model)
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.Login(model);
+
+            if(result == null)
+            {
+                _logger.LogError("Credenciales incorrectas");
+                res.status = "Error";
+                res.data = "Credenciales incorrectas";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
+            return Ok(res);
+        }
     }
 }

@@ -23,6 +23,7 @@
         public string Cedula { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string direccion { get; set; }
+        public int IdPlan { get; set; }
     }
 
     public class UpdateClienteDTO

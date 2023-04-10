@@ -20,4 +20,12 @@
         public double Precio { get; set; }
         public int? IdServicio { get; set; }
     }
+
+    public class VerServiciosDTO
+    {
+        public string Categoria { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public double Precio { get; set; }
+    }
 }

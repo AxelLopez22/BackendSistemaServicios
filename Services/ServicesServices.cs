@@ -33,11 +33,26 @@ namespace ApiServicios.Services
 
             return result;
         }
+
+        public async Task<List<VerServiciosDTO>> ListServices()
+        {
+            var result = await _context.Planes.Where(x => x.Estado == true)
+                .Select(s => new VerServiciosDTO()
+                {
+                    Categoria = s.IdServicioNavigation.Nombre,
+                    Nombre = s.Nombre,
+                    Descripcion = s.Descripcion,
+                    Precio = s.Precio,
+                }).OrderBy(x => x.Categoria).ToListAsync();
+
+            return result;
+        }
     }
 
 
     public interface IServicesServices
     {
         Task<List<ServiciosDTO>> GetServicesAsync();
+        Task<List<VerServiciosDTO>> ListServices();
     }
 }

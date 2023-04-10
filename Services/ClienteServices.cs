@@ -16,6 +16,7 @@ namespace ApiServicios.Services
 
         public async Task<bool> CreateCliente(CreateClientDTO model)
         {
+            var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 Cliente cliente = new Cliente();
@@ -32,10 +33,22 @@ namespace ApiServicios.Services
                 await _context.Clientes.AddAsync(cliente);
                 await _context.SaveChangesAsync();
 
+                ClienteServicio servicio = new ClienteServicio();
+                servicio.Estado = true;
+                servicio.IdCliente = cliente.Id;
+                servicio.Fecha = DateTime.Now;
+                servicio.IdPlan = model.IdPlan;
+                servicio.IdUsuario = 1;
+
+                await _context.ClienteServicios.AddAsync(servicio);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
                 return true;
             }
             catch
             {
+                await transaction.RollbackAsync();
                 return false;
             }
         }

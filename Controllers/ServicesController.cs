@@ -37,5 +37,25 @@ namespace ApiServicios.Controllers
 
             return Ok(res);
         }
+
+        [HttpGet("listarServicio")]
+        public async Task<IActionResult> ListarServicio()
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.ListServices();
+
+            if(result.Count == 0)
+            {
+                _logger.LogError("Error al listar servicios");
+                res.status = "Error";
+                res.data = "Ocurrio un error al listar el servicio";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
+            return Ok(res);
+        }
     }
 }

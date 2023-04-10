@@ -66,3 +66,4 @@ C:\Users\Axel\Desktop\.NetCore\ApiServicios\obj\Debug\net6.0\refint\ApiServicios
 C:\Users\Axel\Desktop\.NetCore\ApiServicios\obj\Debug\net6.0\ApiServicios.pdb
 C:\Users\Axel\Desktop\.NetCore\ApiServicios\obj\Debug\net6.0\ApiServicios.genruntimeconfig.cache
 C:\Users\Axel\Desktop\.NetCore\ApiServicios\obj\Debug\net6.0\ref\ApiServicios.dll
+C:\Users\Axel\Desktop\.NetCore\ApiServicios\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
