@@ -26,7 +26,6 @@ namespace ApiServicios.Services
                 cliente.Celular= model.Celular;
                 cliente.Inss = model.INSS;
                 cliente.Cedula = model.Cedula;
-                cliente.FechaNacimiento = model.FechaNacimiento;
                 cliente.Direccion = model.direccion;
                 cliente.Estado = true;
 
@@ -77,21 +76,19 @@ namespace ApiServicios.Services
             }
         }
 
-        public async Task<ClienteDTO> GetClienteId(int id)
+        public async Task<ClienteDTOById> GetClienteId(int id)
         {
             try
             {
                 var cliente = await _context.Clientes.Where(x => x.Estado == true && x.Id == id)
-                    .Select(s => new ClienteDTO()
+                    .Select(s => new ClienteDTOById()
                     {
                         Id = s.Id,
                         Nombres = s.Nombres,
                         Apellidos = s.Apellidos,
-                        Correo = s.Correo,
                         Celular = (int)s.Celular,
-                        INSS = s.Inss,
-                        Cedula = s.Cedula,
-                        FechaNacimiento = (DateTime)s.FechaNacimiento,
+                        Correo = s.Correo,
+                        Servicio = s.ClienteServicios.Select(x => x.IdPlanNavigation.Nombre).First(),
                         direccion = s.Direccion
                     }).FirstOrDefaultAsync();
 
@@ -109,17 +106,14 @@ namespace ApiServicios.Services
 
         public async Task<List<ClienteDTO>> GetClientes()
         {
-            var clientes = await _context.Clientes.Where(x => x.Estado == true)
+            var clientes = await _context.Clientes.Where(x => x.Estado == true).Include(x => x.ClienteServicios)
                 .Select(s => new ClienteDTO()
                 {
                     Id = s.Id,
                     Nombres = s.Nombres,
                     Apellidos = s.Apellidos,
-                    Correo = s.Correo,
                     Celular = (int)s.Celular,
-                    INSS = s.Inss,
-                    Cedula = s.Cedula,
-                    FechaNacimiento = (DateTime)s.FechaNacimiento,
+                    Servicio = s.ClienteServicios.Select(x => x.IdPlanNavigation.Nombre).First(),
                     direccion = s.Direccion
                 }).ToListAsync();
 
@@ -149,6 +143,15 @@ namespace ApiServicios.Services
                 result.Celular = model.Celular;
                 result.Direccion = model.direccion;
 
+                if (model.IdServicio != 0)
+                {
+                    var servicio = await _context.ClienteServicios.Where(x => x.IdCliente == result.Id).FirstOrDefaultAsync();
+                    servicio.IdPlan = model.IdServicio;
+
+                    _context.ClienteServicios.Update(servicio);
+                    await _context.SaveChangesAsync();
+                }
+
                 _context.Clientes.Update(result);
                 await _context.SaveChangesAsync();
 
@@ -166,6 +169,6 @@ namespace ApiServicios.Services
         Task<bool> UpdateCliente(int id, UpdateClienteDTO model);
         Task<bool> DeleteCliente(int id);
         Task<List<ClienteDTO>> GetClientes();
-        Task<ClienteDTO> GetClienteId(int id);
+        Task<ClienteDTOById> GetClienteId(int id);
     }
 }

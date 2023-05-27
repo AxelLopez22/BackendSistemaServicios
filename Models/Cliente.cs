@@ -17,7 +17,6 @@ namespace ApiServicios.Models
         public int? Celular { get; set; }
         public string Inss { get; set; } = null!;
         public string Cedula { get; set; } = null!;
-        public DateTime? FechaNacimiento { get; set; }
         public string Direccion { get; set; } = null!;
         public bool? Estado { get; set; }
 

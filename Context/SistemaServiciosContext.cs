@@ -19,6 +19,7 @@ namespace ApiServicios.Context
 
         public virtual DbSet<Cliente> Clientes { get; set; } = null!;
         public virtual DbSet<ClienteServicio> ClienteServicios { get; set; } = null!;
+        public virtual DbSet<Pago> Pagos { get; set; } = null!;
         public virtual DbSet<Plane> Planes { get; set; } = null!;
         public virtual DbSet<Servicio> Servicios { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
@@ -27,7 +28,8 @@ namespace ApiServicios.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=LAPTOP-5FHPONOH;Database=SistemaServicios;Trusted_Connection=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=LAPTOP-5FHPONOH;Database=SistemaServicios;Trusted_Connection=True");
             }
         }
 
@@ -50,8 +52,6 @@ namespace ApiServicios.Context
                 entity.Property(e => e.Direccion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.FechaNacimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.Inss)
                     .HasMaxLength(10)
@@ -83,6 +83,16 @@ namespace ApiServicios.Context
                     .WithMany(p => p.ClienteServicios)
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("Fk_ClienteServicio_Refe_Usuario");
+            });
+
+            modelBuilder.Entity<Pago>(entity =>
+            {
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdClienteServicioNavigation)
+                    .WithMany(p => p.Pagos)
+                    .HasForeignKey(d => d.IdClienteServicio)
+                    .HasConstraintName("Fk_Pagos_Refe_ClienteServicio");
             });
 
             modelBuilder.Entity<Plane>(entity =>

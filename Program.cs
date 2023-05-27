@@ -47,6 +47,7 @@ builder.Services.AddScoped<IServicesServices, ServicesServices>();
 builder.Services.AddScoped<IClienteServices, ClienteServices>();
 builder.Services.AddScoped<IClienteServicio, ClienteServicioServices>();
 builder.Services.AddScoped<IUsuarioServices, UsuarioServices>();
+builder.Services.AddScoped<IPagoServices, PagoServices>(); 
 
 //Configurando Swagger
 builder.Services.AddSwaggerGen(c =>

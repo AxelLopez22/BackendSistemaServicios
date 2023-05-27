@@ -57,5 +57,41 @@ namespace ApiServicios.Controllers
 
             return Ok(res);
         }
+
+        [HttpGet("categoriaServicios")]
+        public async Task<IActionResult> GetCategories()
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.VerCategorias();
+
+            if(result.Count == 0)
+            {
+                res.status = "Error";
+                res.data = "La lista esta vacia";
+            }
+
+            res.status = "Ok";
+            res.data = result;
+            return Ok(res);
+        }
+
+        [HttpPost("crearPlan")]
+        public async Task<IActionResult> CrearPlan(CrearPlanDTO model)
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.CrearPlan(model);
+
+            if(result == false)
+            {
+                res.status = "Error";
+                res.data = "Ocurrio un error al crear plan";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = "Plan creado con exito";
+
+            return Ok(res);
+        }
     }
 }

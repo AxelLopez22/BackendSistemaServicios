@@ -23,7 +23,29 @@
 
     public class VerServiciosDTO
     {
+        public int Id { get; set; }
         public string Categoria { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public double Precio { get; set; }
+    }
+
+    public class CategoriaServiciosDTO
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set;}
+    }
+
+    public class CrearPlanDTO
+    {
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public double Precio { get; set; }
+        public int IdServicio { get; set; }
+    }
+
+    public class EditarPlanDTO
+    {
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public double Precio { get; set; }
