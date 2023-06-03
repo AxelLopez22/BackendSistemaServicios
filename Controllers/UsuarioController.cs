@@ -1,5 +1,7 @@
 ﻿using ApiServicios.Dto;
 using ApiServicios.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +21,7 @@ namespace ApiServicios.Controllers
         }
 
         [HttpPost("createUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUser(UsuarioDTO model)
         {
             ModelRequest res = new ModelRequest();

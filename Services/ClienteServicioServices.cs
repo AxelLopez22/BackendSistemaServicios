@@ -1,4 +1,4 @@
-﻿using ApiServicios.Context;
+﻿
 using ApiServicios.Dto;
 using ApiServicios.Models;
 
@@ -6,9 +6,9 @@ namespace ApiServicios.Services
 {
     public class ClienteServicioServices : IClienteServicio
     {
-        private readonly SistemaServiciosContext _context;
+        private readonly sistemaserviciosContext _context;
 
-        public ClienteServicioServices(SistemaServiciosContext context)
+        public ClienteServicioServices(sistemaserviciosContext context)
         {
             _context = context;
         }

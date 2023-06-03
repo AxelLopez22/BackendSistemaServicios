@@ -1,5 +1,4 @@
 ﻿using ApiServicios.Common;
-using ApiServicios.Context;
 using ApiServicios.Dto;
 using ApiServicios.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +11,10 @@ namespace ApiServicios.Services
 {
     public class UsuarioServices : IUsuarioServices
     {
-        private readonly SistemaServiciosContext _context;
+        private readonly sistemaserviciosContext _context;
         private readonly IConfiguration _config;
 
-        public UsuarioServices(SistemaServiciosContext context, IConfiguration config)
+        public UsuarioServices(sistemaserviciosContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
@@ -76,7 +75,7 @@ namespace ApiServicios.Services
             var creds = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
             var Expiracion = DateTime.UtcNow.AddHours(1);
-            var securityToken = new JwtSecurityToken(issuer: "localhost", audience: "localhost", claims: Claims,
+            var securityToken = new JwtSecurityToken(issuer: "https://sistemaservicios.netlify.app", audience: "https://sistemaservicios.netlify.app", claims: Claims,
                 expires: Expiracion, signingCredentials: creds);
 
             return new AuthResponse()

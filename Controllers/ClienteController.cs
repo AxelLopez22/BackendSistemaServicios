@@ -1,5 +1,7 @@
 ﻿using ApiServicios.Dto;
 using ApiServicios.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +9,7 @@ namespace ApiServicios.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClienteController : ControllerBase
     {
         private readonly IClienteServices _services;
@@ -48,6 +51,42 @@ namespace ApiServicios.Controllers
                 res.status = "Error";
                 res.data = "El cliente no existe o ha sido eliminado";
                 return NotFound(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
+            return Ok(res);
+        }
+
+        [HttpGet("ListarClientes")]
+        public async Task<IActionResult> ListarClientes()
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.ListarClientes();
+            if(result.Count() == 0)
+            {
+                res.status = "Error";
+                res.data = "La lista esta vacia";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
+            return Ok(res);
+        }
+
+        [HttpGet("GetPlanPayment/{id}")]
+        public async Task<IActionResult> GetPlanPayment(int id)
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.GetPlanPayment(id);
+            if(result == null)
+            {
+                res.status = "Error";
+                res.data = "Error al listar el plan a pagar";
+                return BadRequest(res);
             }
 
             res.status = "Ok";

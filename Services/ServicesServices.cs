@@ -1,5 +1,4 @@
-﻿using ApiServicios.Context;
-using ApiServicios.Dto;
+﻿using ApiServicios.Dto;
 using ApiServicios.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +6,9 @@ namespace ApiServicios.Services
 {
     public class ServicesServices : IServicesServices
     {
-        private readonly SistemaServiciosContext _context;
+        private readonly sistemaserviciosContext _context;
 
-        public ServicesServices(SistemaServiciosContext context)
+        public ServicesServices(sistemaserviciosContext context)
         {
             _context = context;
         }
@@ -108,6 +107,20 @@ namespace ApiServicios.Services
 
             return result;
         }
+
+        public async Task<EditarPlanDTO> VerServicioId(int Id)
+        {
+            var servicio = await _context.Planes.Where(x => x.Id == Id && x.Estado == true)
+                .Select(x => new EditarPlanDTO() 
+                {
+                    Nombre = x.Nombre,
+                    Descripcion = x.Descripcion,
+                    Precio = x.Precio
+                })
+                .FirstOrDefaultAsync();
+
+            return servicio;
+        }
     }
 
 
@@ -118,5 +131,6 @@ namespace ApiServicios.Services
         Task<List<CategoriaServiciosDTO>> VerCategorias();
         Task<bool> CrearPlan(CrearPlanDTO model);
         Task<bool> EditarPlanDTO(int IdPlan, EditarPlanDTO model);
+        Task<EditarPlanDTO> VerServicioId(int Id);
     }
 }

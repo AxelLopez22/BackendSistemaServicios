@@ -1,4 +1,5 @@
-using ApiServicios.Context;
+
+using ApiServicios.Models;
 using ApiServicios.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificationsOrigins = "_myAllowSpecificationsOrigins";
 // Add services to the container.
 
-builder.Services.AddDbContext<SistemaServiciosContext>(options =>
+builder.Services.AddDbContext<sistemaserviciosContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDb"));
 });
@@ -27,8 +28,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "localhost",
-        ValidAudience = "localhost",
+        ValidIssuer = "https://sistemaservicios.netlify.app",
+        ValidAudience = "https://sistemaservicios.netlify.app",
         IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["LlaveJwt"])),
         ClockSkew = TimeSpan.Zero
@@ -39,7 +40,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificationsOrigins, policy =>
     {
-        policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins("https://sistemaservicios.netlify.app").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -81,7 +82,7 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

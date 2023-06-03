@@ -9,6 +9,7 @@ namespace ApiServicios.Models
         public double? Total { get; set; }
         public DateTime? Fecha { get; set; }
         public int? IdClienteServicio { get; set; }
+        public string? Mes { get; set; }
 
         public virtual ClienteServicio? IdClienteServicioNavigation { get; set; }
     }

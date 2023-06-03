@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApiServicios.Models;
+using ApiServicios.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ApiServicios.Context
+namespace ApiServicios.Models
 {
-    public partial class SistemaServiciosContext : DbContext
+    public partial class sistemaserviciosContext : DbContext
     {
-        public SistemaServiciosContext()
+        public sistemaserviciosContext()
         {
         }
 
-        public SistemaServiciosContext(DbContextOptions<SistemaServiciosContext> options)
+        public sistemaserviciosContext(DbContextOptions<sistemaserviciosContext> options)
             : base(options)
         {
         }
@@ -23,13 +23,13 @@ namespace ApiServicios.Context
         public virtual DbSet<Plane> Planes { get; set; } = null!;
         public virtual DbSet<Servicio> Servicios { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
+        public virtual DbSet<PagosClientesSP> PagosClientesSP { get; set; } = null!;
+        public virtual DbSet<VwListarCliente> VwListarClientes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-5FHPONOH;Database=SistemaServicios;Trusted_Connection=True");
             }
         }
 
@@ -89,6 +89,10 @@ namespace ApiServicios.Context
             {
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
+                entity.Property(e => e.Mes)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.IdClienteServicioNavigation)
                     .WithMany(p => p.Pagos)
                     .HasForeignKey(d => d.IdClienteServicio)
@@ -135,6 +139,19 @@ namespace ApiServicios.Context
                 entity.Property(e => e.NombreUsuario)
                     .HasMaxLength(20)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VwListarCliente>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("Vw_ListarClientes");
+
+                entity.Property(e => e.Cliente)
+                    .HasMaxLength(101)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,5 +1,4 @@
-﻿using ApiServicios.Context;
-using ApiServicios.Dto;
+﻿using ApiServicios.Dto;
 using ApiServicios.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +6,9 @@ namespace ApiServicios.Services
 {
     public class ClienteServices : IClienteServices
     {
-        private readonly SistemaServiciosContext _context;
+        private readonly sistemaserviciosContext _context;
 
-        public ClienteServices(SistemaServiciosContext context)
+        public ClienteServices(sistemaserviciosContext context)
         {
             _context = context;
         }
@@ -125,6 +124,25 @@ namespace ApiServicios.Services
             return clientes;
         }
 
+        public async Task<GetPlanPayment> GetPlanPayment(int IdUsuario)
+        {
+            var result = await _context.ClienteServicios.Include(x => x.IdPlanNavigation).Where(x => x.IdCliente == IdUsuario)
+                .Select(s => new GetPlanPayment()
+                {
+                    IdClienteServicio = s.Id,
+                    Descripcion = s.IdPlanNavigation.Descripcion,
+                    Precio = s.IdPlanNavigation.Precio
+                }).FirstOrDefaultAsync();
+
+            return result;
+        }
+
+        public async Task<List<VwListarCliente>> ListarClientes()
+        {
+            var result = await _context.VwListarClientes.ToListAsync();
+            return result;
+        }
+
         public async Task<bool> UpdateCliente(int id, UpdateClienteDTO model)
         {
             try
@@ -170,5 +188,7 @@ namespace ApiServicios.Services
         Task<bool> DeleteCliente(int id);
         Task<List<ClienteDTO>> GetClientes();
         Task<ClienteDTOById> GetClienteId(int id);
+        Task<List<VwListarCliente>> ListarClientes();
+        Task<GetPlanPayment> GetPlanPayment(int IdUsuario);
     }
 }

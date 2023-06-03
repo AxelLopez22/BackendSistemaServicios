@@ -50,4 +50,11 @@
         public string Descripcion { get; set; }
         public double Precio { get; set; }
     }
+
+    public class GetPlanPayment
+    {
+        public int IdClienteServicio { get; set; }
+        public string Descripcion { get; set; }
+        public double Precio { get; set;}
+    }
 }

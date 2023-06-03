@@ -1,5 +1,7 @@
 ﻿using ApiServicios.Dto;
 using ApiServicios.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +9,7 @@ namespace ApiServicios.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PagoController : ControllerBase
     {
         private readonly IPagoServices _services;
@@ -41,6 +44,43 @@ namespace ApiServicios.Controllers
 
             res.status = "Ok";
             res.data = "Pago registrado con exito";
+            return Ok(res);
+        }
+
+        [HttpGet("listarPagosClientes")]
+        public async Task<IActionResult> VerPagosClientes()
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.VerPagosClientes();
+
+            if(result.Count() == 0)
+            {
+                res.status = "Error";
+                res.data = "No hay pagos registrados";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
+            return Ok(res);
+        }
+
+        [HttpGet("historialPagos/{id}")]
+        public async Task<IActionResult> VerHistorialCliente(int id)
+        {
+            ModelRequest res = new ModelRequest();
+            var result = await _services.HistorialPagos(id);
+            if (result == null)
+            {
+                res.status = "Error";
+                res.data = "Ocurrio un error al listar el historial de pagos";
+                return BadRequest(res);
+            }
+
+            res.status = "Ok";
+            res.data = result;
+
             return Ok(res);
         }
     }
